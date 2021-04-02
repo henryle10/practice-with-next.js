@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useAuth } from '../lib/auth';
-import { auth } from 'firebase';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -8,7 +7,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Fast Feedback</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -16,9 +15,15 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">hello world!</a>
         </h1>
+        <p className="description">
+          Curent user: <code>{auth.user ? auth.user.email : "no users"}</code>
+        </p>
         <br />
-        <button onClick={(e) => auth.siginWithGithub()}>Sign In</button>
-        <div>{auth?.user?.email}</div>
+        {auth.user ? (
+          <button onClick={(e) => auth.signout()}>Sign Out</button>
+        ) : (
+          <button onClick={(e) => auth.siginWithGithub()}>Sign In</button>)}
+
       </main>
 
       <footer className={styles.footer}>
