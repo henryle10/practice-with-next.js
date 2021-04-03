@@ -1,11 +1,16 @@
-import { AuthProvider } from '../lib/auth';
-import '../styles/globals.css'
+import { ThemeProvider } from '@chakra-ui/react';
+import { AuthProvider, CSSReset } from '../lib/auth';
+import customTheme from '../styles/theme';
+
+
 
 const App = ({ Component, pageProps }) => {
   return (
-    <AuthProvider>
-      <Component {...pageProps} />
-    </AuthProvider>
+    <ThemeProvider theme={customTheme}>
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
