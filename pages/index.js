@@ -5,25 +5,21 @@ import { useAuth } from '@/lib/auth';
 export default function Home() {
   const auth = useAuth();
   return (
-    <div>
+    <Flex as="main" direction="column">
       <Head>
         <title>Fast Feedback</title>
       </Head>
-      <Flex as="main" direction="column">
-        <Heading>Fast Feedback</Heading>
-        <Icon color="black" name="logo" size="32px" />
-        <Text>
-          Curent user: <Code>{auth.user ? auth.user.email : "no users"}</Code>
-        </Text>
-        <br />
-        {auth.user ? (
-          <Button onClick={(e) => auth.signout()}>Sign Out</Button>
-        ) : (
-          <Button onClick={(e) => auth.siginWithGithub()}>Sign In</Button>
-        )}
-      </Flex>
-      <footer>
-      </footer>
-    </div >
+      <Heading>Fast Feedback</Heading>
+      <Icon color="black" name="logo" size="32px" />
+      <Text>
+        Curent user: <Code>{auth.user ? auth.user.email : "no users"}</Code>
+      </Text>
+      <br />
+      {auth.user ? (
+        <Button onClick={(e) => auth.signout()}>Sign Out</Button>
+      ) : (
+        <Button onClick={(e) => auth.siginWithGithub()}>Sign In</Button>
+      )}
+    </Flex>
   )
 }
