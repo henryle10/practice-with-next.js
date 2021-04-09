@@ -1,25 +1,30 @@
 import Head from 'next/head';
 import { Code, Heading, Text, Button, Icon, Flex } from '@chakra-ui/react';
 import { useAuth } from '@/lib/auth';
+import EmptyState from '@/components/EmptyState'
 
-export default function Home() {
+
+const Home = () => {
   const auth = useAuth();
+
   return (
-    <Flex as="main" direction="column">
+    <Flex as="main" direction="column" align="center" justify="center" h="100vh">
       <Head>
         <title>Fast Feedback</title>
       </Head>
       <Heading>Fast Feedback</Heading>
-      <Icon color="black" name="logo" size="32px" />
       <Text>
         Curent user: <Code>{auth.user ? auth.user.email : "no users"}</Code>
       </Text>
       <br />
       {auth.user ? (
-        <Button onClick={(e) => auth.signout()}>Sign Out</Button>
+        <EmptyState/>
       ) : (
         <Button onClick={(e) => auth.siginWithGithub()}>Sign In</Button>
+
       )}
     </Flex>
   )
 }
+
+export default Home
