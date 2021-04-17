@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import {
     Modal,
     ModalOverlay,
@@ -19,6 +19,11 @@ import { useAuth } from '@/lib/auth';
 const AddSiteModal = ({ children }) => {
     const auth = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { handleSubmit, register } = useForm();
+
+    const createSite = (e) => {
+
+    };
 
     return (
         <>
@@ -34,11 +39,11 @@ const AddSiteModal = ({ children }) => {
                     transform: 'scale(0.95)'
                 }}
             >
-                {children}
+                Add Your first site
             </Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent as="form">
+                <ModalContent as="form" onSubmit={handleSubmit(onCreateSite)}>
                     <ModalHeader fontWeight="bold">Add Site</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
@@ -71,6 +76,7 @@ const AddSiteModal = ({ children }) => {
                             color="#194D4C"
                             fontWeight="medium"
                             type="submit"
+                            onClick={createSite}
                         >
                             Create
                         </Button>
