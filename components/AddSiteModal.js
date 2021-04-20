@@ -15,15 +15,14 @@ import {
 } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
+import { createSite } from '@/lib/db';
 
 const AddSiteModal = ({ children }) => {
     const auth = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { handleSubmit, register } = useForm();
 
-    const createSite = (e) => {
-
-    };
+    const onCreateSite = (values) => createSite(values);
 
     return (
         <>
