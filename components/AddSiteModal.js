@@ -11,18 +11,38 @@ import {
     FormLabel,
     Button,
     Input,
-    useDisclosure
+    useToast,
+    useDisclosure,
+    toast
 } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
 import { createSite } from '@/lib/db';
+import { useRef } from 'react';
 
 const AddSiteModal = ({ children }) => {
+    const initialRef = useRef();
     const auth = useAuth();
+    const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { handleSubmit, register } = useForm();
 
-    const onCreateSite = (values) => createSite(values);
+    const onCreateSite = ({ site, url }) => {
+        createSite({
+            authorId: auth.user.uid,
+            createdAt: new Date().toISOString(),
+            site,
+            url
+        });
+        toast({
+            title: 'Success!',
+            description: "We've added your site.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        });
+        onClose();
+    }
 
     return (
         <>
@@ -40,7 +60,7 @@ const AddSiteModal = ({ children }) => {
             >
                 Add Your first site
             </Button>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent as="form" onSubmit={handleSubmit(onCreateSite)}>
                     <ModalHeader fontWeight="bold">Add Site</ModalHeader>
@@ -51,16 +71,21 @@ const AddSiteModal = ({ children }) => {
                             <Input
                                 id="site-input"
                                 placeholder="My site"
-                                name="name"
+                                name="site"
+                            // ref={register({
+                            //     required: 'Required'
+                            // })}
                             />
                         </FormControl>
-
                         <FormControl mt={4}>
                             <FormLabel>Link</FormLabel>
                             <Input
                                 id="link-input"
                                 placeholder="https://website.com"
                                 name="url"
+                            // ref={register({
+                            //     required: 'Required'
+                            // })}
                             />
                         </FormControl>
                     </ModalBody>
@@ -75,7 +100,6 @@ const AddSiteModal = ({ children }) => {
                             color="#194D4C"
                             fontWeight="medium"
                             type="submit"
-                            onClick={createSite}
                         >
                             Create
                         </Button>
