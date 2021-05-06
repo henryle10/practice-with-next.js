@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr';
 import {
     Modal,
     ModalOverlay,
@@ -12,28 +13,32 @@ import {
     Button,
     Input,
     useToast,
-    useDisclosure,
-    toast
+    useDisclosure
 } from '@chakra-ui/react';
 
-import { useAuth } from '@/lib/auth';
 import { createSite } from '@/lib/db';
-import { useRef } from 'react';
+import { useAuth } from '@/lib/auth';
 
 const AddSiteModal = ({ children }) => {
-    const initialRef = useRef();
     const auth = useAuth();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { handleSubmit, register } = useForm();
 
-    const onCreateSite = ({ site, url }) => {
-        createSite({
+    const onCreateSite = ({ name, url }) => {
+        const newSite = {
             authorId: auth.user.uid,
             createdAt: new Date().toISOString(),
-            site,
-            url
-        });
+            name,
+            url,
+            settings: {
+                icons: true,
+                timestamp: true,
+                ratings: false
+            }
+        };
+
+        createSite(newSite);
         toast({
             title: 'Success!',
             description: "We've added your site.",
@@ -41,8 +46,15 @@ const AddSiteModal = ({ children }) => {
             duration: 5000,
             isClosable: true
         });
+        mutate(
+            ['/api/sites', auth.user.token],
+            async (data) => ({
+                sites: [{ id, ...newSite }, ...data.sites]
+            }),
+            false
+        );
         onClose();
-    }
+    };
 
     return (
         <>
@@ -60,7 +72,7 @@ const AddSiteModal = ({ children }) => {
             >
                 Add Your first site
             </Button>
-            <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent as="form" onSubmit={handleSubmit(onCreateSite)}>
                     <ModalHeader fontWeight="bold">Add Site</ModalHeader>
